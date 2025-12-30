@@ -2,15 +2,34 @@ server:
   port: 8082
 
 spring:
+  cloud:
+    consul:
+      host: localhost
+      port: 8500
+      discovery:
+        service-name: SERVICE-CAR
+        health-check-path: /actuator/health
+        health-check-interval: 10s
+        prefer-ip-address: false
+        hostname: host.docker.internal
+        instance-id: ${spring.application.name}:${server.port}
   application:
     name: SERVICE-CAR
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/carservicedb?createDatabaseIfNotExist=true
-    username: "root"
-    password: ""
+    url: jdbc:mysql://localhost:3307/carservicedb?createDatabaseIfNotExist=true
+    username: root
+    password: root
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: true
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: always

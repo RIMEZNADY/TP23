@@ -3,11 +3,33 @@ server:
 
 spring:
   application:
-    name: Gateway
+    name: SERVICE-GATEWAY
   cloud:
+    consul:
+      host: localhost
+      port: 8500
+      discovery:
+        service-name: SERVICE-GATEWAY
+        health-check-path: /actuator/health
+        health-check-interval: 10s
+        prefer-ip-address: false
+        hostname: host.docker.internal
+        instance-id: ${spring.application.name}:${server.port}
     discovery:
       enabled: true
+  main:
+    web-application-type: reactive
 
-eureka:
-  instance:
-    hostname: localhost
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: always
+  health:
+    livenessState:
+      enabled: true
+    readinessState:
+      enabled: true
